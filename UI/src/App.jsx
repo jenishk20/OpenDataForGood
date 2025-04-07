@@ -9,10 +9,12 @@ function App() {
   const [searchGender, setSearchGender] = useState("");
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/patients").then((response) => {
-      setData(response.data);
-      setFilteredData(response.data);
-    });
+    axios
+      .get("https://opendataforgood.onrender.com/patients")
+      .then((response) => {
+        setData(response.data);
+        setFilteredData(response.data);
+      });
   }, []);
 
   useEffect(() => {

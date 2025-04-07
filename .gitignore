@@ -25,4 +25,5 @@ yarn-error.log*
 node_modules*
 __pycache__/*
 myenv/*
-package*
+package-lock.json
+backend/package*
