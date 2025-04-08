@@ -7,14 +7,22 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [searchName, setSearchName] = useState("");
   const [searchGender, setSearchGender] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("https://opendataforgood.onrender.com/patients")
-      .then((response) => {
-        setData(response.data);
-        setFilteredData(response.data);
-      });
+    const timeout = setTimeout(() => {
+      axios
+        .get("https://opendataforgood.onrender.com/patients")
+        .then((response) => {
+          setData(response.data);
+          setFilteredData(response.data);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 3000); // Delay API call by 1 second
+
+    return () => clearTimeout(timeout); // Cleanup
   }, []);
 
   useEffect(() => {
@@ -72,17 +80,22 @@ function App() {
           <option value="unknown">Unknown</option>
         </select>
       </div>
-
-      <div className="bg-white rounded-xl shadow-lg p-4">
-        <DataTable
-          title="FHIR Patient Records"
-          columns={columns}
-          data={filteredData}
-          pagination
-          highlightOnHover
-          responsive
-        />
-      </div>
+      {loading ? (
+        <div id="loading" className="text-center text-gray-500">
+          Loading data...
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow-lg p-4">
+          <DataTable
+            title="FHIR Patient Records"
+            columns={columns}
+            data={filteredData}
+            pagination
+            highlightOnHover
+            responsive
+          />
+        </div>
+      )}
     </div>
   );
 }
